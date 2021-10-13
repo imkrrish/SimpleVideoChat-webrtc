@@ -160,36 +160,40 @@ function App() {
           </div>
           <div className="myId">
             <ThemeProvider theme={theme}>
-              <TextField
-                id="outlined-basic"
-                label="Your Name"
-                variant="outlined"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                color='secondary'
-                InputLabelProps={{
-                  classes: {
-                    root: classes.cssLabel,
-                    focused: classes.cssFocused,
-                  }
-                }}
-              />
+              <div className="input">
+                <TextField
+                  id="outlined-basic"
+                  label="Your Name"
+                  variant="outlined"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  color='secondary'
+                  InputLabelProps={{
+                    classes: {
+                      root: classes.cssLabel,
+                      focused: classes.cssFocused,
+                    }
+                  }}
+                />
+              </div>
             </ThemeProvider>
             <ThemeProvider theme={theme}>
-              <TextField
-                id="outlined-basic"
-                label="ID to call"
-                variant="outlined"
-                value={idToCall}
-                onChange={(e) => setIdToCall(e.target.value)}
-                color='secondary'
-                InputLabelProps={{
-                  classes: {
-                    root: classes.cssLabel,
-                    focused: classes.cssFocused,
-                  }
-                }}
-              />
+              <div className="input">
+                <TextField
+                  id="outlined-basic"
+                  label="ID to call"
+                  variant="outlined"
+                  value={idToCall}
+                  onChange={(e) => setIdToCall(e.target.value)}
+                  color='secondary'
+                  InputLabelProps={{
+                    classes: {
+                      root: classes.cssLabel,
+                      focused: classes.cssFocused,
+                    }
+                  }}
+                />
+              </div>
             </ThemeProvider>
             <div className="call-button">
               {callAccepted && !callEnded ? (

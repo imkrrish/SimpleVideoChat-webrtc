@@ -1,0 +1,91 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.branding {
+    color: #fff;
+    font-weight: 400;
+}
+
+.card {
+    background-color: #1D1D1D;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.video-container.callaccepted {
+    position: relative;
+}
+
+.video {
+    width: 95%;
+    margin: 0 auto;
+}
+
+
+.video video {
+    width: 100%;
+    max-height: 500px;
+    padding: 20px 0;
+    transform: scaleX(-1);
+}
+
+.video.callaccepted {
+    z-index: 999;
+    width: 20%;
+    position: absolute;
+    right: 11%;
+    bottom: 0%;
+}
+
+.callervideo {
+    width: 95%;
+    margin: 0 auto;
+}
+
+.callervideo video {
+    width: 100%;
+    max-height: 500px;
+    padding: 20px 0;
+    transform: scaleX(-1);
+}
+
+.myId {
+    width: 75%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.call-button {
+    text-align: center;
+}
+
+.caller {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background-color: #1d1d1dd1;
+    width: 58%;
+    height: 70%;
+}
+
+body {
+    background: #121212;
+}

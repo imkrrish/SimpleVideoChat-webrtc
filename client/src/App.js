@@ -8,6 +8,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import Peer from "simple-peer"
 import io from "socket.io-client"
 import "./App.css"
+import logo from './konnectlogo.svg'
 import { makeStyles } from '@material-ui/core/styles'
 import { createTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from '@material-ui/styles'
@@ -140,7 +141,10 @@ function App() {
     <>
       <div className="container">
         <div className="nav">
-          <h1 className="branding">Konnect</h1>
+          <div className="brand">
+            <img src={logo} alt="logo" />
+            <h1 className="branding">Konnect</h1>
+          </div>
           <CopyToClipboard text={me}>
             <Button variant="contained" color="primary" startIcon={<AssignmentIcon fontSize="large" />}>
               Copy YOUR ID

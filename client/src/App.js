@@ -1,8 +1,13 @@
 import Button from "@material-ui/core/Button"
+import IconButton from "@material-ui/core/IconButton"
 import TextField from "@material-ui/core/TextField"
 import AssignmentIcon from "@material-ui/icons/Assignment"
 import Fab from '@material-ui/core/Fab'
 import PhoneIcon from "@material-ui/icons/Phone"
+import VideocamIcon from '@material-ui/icons//Videocam';
+import VideocamOffIcon from '@material-ui/icons/VideocamOff';
+import MicIcon from '@material-ui/icons/Mic';
+import MicOffIcon from '@material-ui/icons/MicOff';
 import React, { useEffect, useRef, useState } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import Peer from "simple-peer"
@@ -57,6 +62,8 @@ function App() {
   const [idToCall, setIdToCall] = useState("")
   const [callEnded, setCallEnded] = useState(false)
   const [name, setName] = useState("")
+  const [audio, setaudio] = useState("true");
+  const [video, setvideo] = useState("true");
   const myVideo = useRef()
   const userVideo = useRef()
   const connectionRef = useRef()
@@ -128,6 +135,28 @@ function App() {
     connectionRef.current = peer
   }
 
+  const handleVideo = () => {
+    const videoTracks = stream.getTracks().find(track => track.kind === "video");
+    if (videoTracks.enabled) {
+      videoTracks.enabled = false;
+      setvideo(false);
+    } else {
+      videoTracks.enabled = true;
+      setvideo(true);
+    }
+  }
+
+  const handleAudio = () => {
+    const audioTracks = stream.getTracks().find(track => track.kind === "audio");
+    if (audioTracks.enabled) {
+      audioTracks.enabled = false;
+      setaudio(false);
+    } else {
+      audioTracks.enabled = true;
+      setaudio(true);
+    }
+  }
+
   const leaveCall = () => {
     setCallEnded(true)
     document.getElementById('videocontainer').classList.remove("callaccepted")
@@ -153,6 +182,7 @@ function App() {
         </div>
         <div className="card">
           <div id='videocontainer' className="video-container">
+            {/* className={`video-container ${callAccepted ? callaccepted : ""}`} */}
             <div id="video" className="video">
               {stream && <video playsInline muted ref={myVideo} autoPlay />}
             </div>
@@ -161,7 +191,23 @@ function App() {
                 <video playsInline ref={userVideo} autoPlay /> :
                 null}
             </div>
+
+            <div className="streamControls">
+              <ThemeProvider theme={theme}>
+                <div className="iconbutton">
+                  <IconButton onClick={handleVideo}>
+                    {video ? <VideocamIcon fontSize="large" /> : <VideocamOffIcon fontSize="large" />}
+                  </IconButton>
+                </div>
+              </ThemeProvider>
+              <ThemeProvider theme={theme}>
+                <IconButton onClick={handleAudio}>
+                  {audio ? <MicIcon fontSize="large" /> : <MicOffIcon fontSize="large" />}
+                </IconButton>
+              </ThemeProvider>
+            </div>
           </div>
+
           <div className="myId">
             <ThemeProvider theme={theme}>
               <div className="input">

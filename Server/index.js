@@ -12,8 +12,9 @@ const io = require("socket.io")(server, {
 io.on("connection", (socket) => {
     socket.emit("me", socket.id)
 
-    socket.on("disconnect", () => {
-        socket.broadcast.emit("callEnded")
+    socket.on("endCall", ({ id }) => {
+        socket.broadcast.emit("endCall")
+        io.to(id).emit("endCall")
     })
 
     socket.on("callUser", (data) => {

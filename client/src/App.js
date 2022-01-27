@@ -61,6 +61,7 @@ function App() {
   const [callAccepted, setCallAccepted] = useState(false)
   const [idToCall, setIdToCall] = useState("")
   const [callEnded, setCallEnded] = useState(false)
+  const [otherUser, setotherUser] = useState();
   const [name, setName] = useState("")
   const [audio, setaudio] = useState("true");
   const [video, setvideo] = useState("true");
@@ -78,6 +79,10 @@ function App() {
       setMe(id)
     })
 
+    socket.on("endCall", () => {
+      window.location.reload();
+    });
+
     socket.on("callUser", (data) => {
       setReceivingCall(true)
       setCaller(data.from)
@@ -92,6 +97,7 @@ function App() {
       trickle: false,
       stream: stream
     })
+    setotherUser(id)
     peer.on("signal", (data) => {
       socket.emit("callUser", {
         userToCall: id,
@@ -161,7 +167,9 @@ function App() {
     setCallEnded(true)
     document.getElementById('videocontainer').classList.remove("callaccepted")
     document.getElementById('video').classList.remove("callaccepted")
+    socket.emit("endCall", { id: otherUser });
     connectionRef.current.destroy()
+    window.location.reload();
   }
 
   const classes = useStyles();

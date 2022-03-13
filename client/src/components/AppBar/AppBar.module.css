@@ -1,0 +1,20 @@
+.container {
+    max-width: 1170px;
+    margin: auto;
+}
+
+.nav {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2vh;
+}
+
+.nav img {
+    height: 2rem;
+}
+
+.img {
+    height: 1rem;
+}

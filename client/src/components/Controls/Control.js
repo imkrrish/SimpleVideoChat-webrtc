@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import FabIconButton from '../CustomButton/FabIconButton'
 import EndCallButton from '../CustomButton/EndCallButton';
 import CallIcon from '@mui/icons-material/Call';
@@ -9,6 +9,7 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import FilterIcon from '@mui/icons-material/Filter';
 import { makeStyles } from '@mui/styles';
+import { SocketContext } from '../../context/VideoContext';
 
 const useStyles = makeStyles(() => ({
     controlBar: {
@@ -23,8 +24,12 @@ const useStyles = makeStyles(() => ({
 }))
 
 const Control = () => {
-    // const [video, setvideo] = useState(true);
     const classes = useStyles();
+    const {
+        myVideoStatus,
+        myMicStatus
+    } = useContext(SocketContext);
+
     return (
         <>
             <div className={classes.controlBar}>
@@ -38,7 +43,8 @@ const Control = () => {
                     color='secondary'
                     size='medium'
                     lable='Video'
-                    icon={<VideocamIcon fontSize='medium' />}
+                    icon={myVideoStatus ? <VideocamIcon fontSize='medium' /> : <VideocamOffIcon fontSize='medium' />}
+                    update='Video'
                 />
                 <FabIconButton
                     color='primary'
@@ -56,7 +62,8 @@ const Control = () => {
                     color='secondary'
                     size='medium'
                     lable='Mic'
-                    icon={<MicIcon fontSize='medium' />}
+                    update='Audio'
+                    icon={myMicStatus ? <MicIcon fontSize='medium' /> : <MicOffIcon fontSize='medium' />}
                 />
                 <FabIconButton
                     color='secondary'

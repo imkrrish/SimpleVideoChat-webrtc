@@ -13,12 +13,40 @@
     height: 100%;
     border-radius: 20px;
     transform: scaleX(-1);
+    transition: ease-in-out 0.5s;
 }
 
 .controls {
     position: absolute;
+    z-index: 99;
     bottom: 4%;
     left: 50%;
     transform: translateX(-50%);
     width: 35%;
+}
+
+.bg {
+    position: absolute;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.av {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.avatar {
+    position: absolute;
+    z-index: 88;
+    width: 70%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: ease-in-out 0.5s;
 }

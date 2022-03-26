@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Fab } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
+import { SocketContext } from '../../context/VideoContext';
+
 
 
 const theme = createTheme({
@@ -38,6 +40,19 @@ const useStyles = makeStyles((theme) => ({
 
 const FabIconButton = (props) => {
   const classes = useStyles();
+  const {
+    updateVideo,
+    updateMic
+  } = useContext(SocketContext);
+
+  const updateMedia = () => {
+    if (props.update === "Video") {
+      updateVideo();
+    }
+    if (props.update === "Audio") {
+      updateMic();
+    }
+  }
   return <>
     <ThemeProvider theme={theme}>
       <Fab
@@ -45,6 +60,10 @@ const FabIconButton = (props) => {
         color={props.color}
         aria-label={props.lable}
         size={props.size}
+        onClick={() => {
+          updateMedia();
+        }
+        }
       >
         {props.icon}
       </Fab>

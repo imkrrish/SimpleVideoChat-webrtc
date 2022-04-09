@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const io = require("socket.io")(server, {
     cors: {
-        origin: "*",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"]
     }
 });
@@ -12,10 +12,6 @@ const io = require("socket.io")(server, {
 app.use(cors());
 
 const PORT = process.env.PORT || 5000;
-
-app.get("/", (req, res) => {
-    res.send('Konnect')
-});
 
 io.on("connection", (socket) => {
     socket.emit("me", socket.id);
@@ -29,7 +25,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("updateMyMedia", (data) => {
-        socket.broadcast.emit("updateMyMedia", {
+        socket.broadcast.emit("updateUserMedia", {
             type: data.type,
             currentMediaStatus: data.currentMediaStatus
         });
@@ -46,9 +42,10 @@ io.on("connection", (socket) => {
     socket.on("answerCall", (data) => {
         socket.broadcast.emit("updateUserMedia", {
             type: data.type,
-            currentMediaStatus: data.currentMediaStatus
+            currentMediaStatus: data.myMediaStatus
         });
-        io.to(data.to).emit("callAccepted", data);
+        io.to(data.to).emit("callAccepted", { signal: data.signal, userName: data.userName });
+        console.log(data.to);
     });
 
     socket.on("endCall", ({ id }) => {

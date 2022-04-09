@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import FabIconButton from '../CustomButton/FabIconButton'
 import EndCallButton from '../CustomButton/EndCallButton';
 import CallIcon from '@mui/icons-material/Call';
@@ -27,7 +27,9 @@ const Control = () => {
     const classes = useStyles();
     const {
         myVideoStatus,
-        myMicStatus
+        myMicStatus,
+        callAccepted,
+        callEnded,
     } = useContext(SocketContext);
 
     return (
@@ -46,18 +48,22 @@ const Control = () => {
                     icon={myVideoStatus ? <VideocamIcon fontSize='medium' /> : <VideocamOffIcon fontSize='medium' />}
                     update='Video'
                 />
-                <FabIconButton
-                    color='primary'
-                    size='large'
-                    lable='makeCall'
-                    icon={<CallIcon fontSize='large' />}
-                />
-                {/* <EndCallButton
-                    color='primary'
-                    size='large'
-                    lable='endCall'
-                    icon={<CallIcon fontSize='large' />}
-                /> */}
+                {callAccepted && !callEnded ?
+                    <EndCallButton
+                        color='primary'
+                        size='large'
+                        lable='endCall'
+                        icon={<CallIcon fontSize='large' />}
+                    />
+                    :
+                    <FabIconButton
+                        color='primary'
+                        size='large'
+                        lable='makeCall'
+                        icon={<CallIcon fontSize='large' />}
+                        update='MakeCall'
+                    />
+                }
                 <FabIconButton
                     color='secondary'
                     size='medium'

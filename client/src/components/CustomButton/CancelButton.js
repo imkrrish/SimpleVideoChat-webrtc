@@ -1,18 +1,16 @@
 import React, { useContext } from 'react'
-import { SocketContext } from '../../context/VideoContext';
-import { Fab } from '@mui/material';
+import { SocketContext } from '../../context/VideoContext'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-
+import { IconButton } from '@mui/material'
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const theme = createTheme({
     palette: {
         primary: {
-            light: '#ff5a36',
-            main: '#ff0000',
-            dark: '#c20000',
+            main: '#ffffff',
             contrastText: '#ffffff',
-        }
+        },
     },
     components: {
         MuiSvgIcon: {
@@ -27,33 +25,41 @@ const theme = createTheme({
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))',
+        textShadow: '0px 2px 4px rgba(0, 0, 0, 0.50)',
     },
 }))
 
-const EndCallButton = (props) => {
-    const {
-        leaveCall
-    } = useContext(SocketContext);
+const CancelButton = (props) => {
     const classes = useStyles();
+    const {
+        setCreateMyId,
+        setmakeCall
+    } = useContext(SocketContext);
+
     const handleClick = () => {
-        leaveCall();
+        if (props.name === 'generateId') {
+            setCreateMyId(false);
+        }
+        if (props.name === 'MakeCall') {
+            setmakeCall(false);
+            setCreateMyId(false);
+        }
     }
-    return <>
+
+    return (
         <ThemeProvider theme={theme}>
-            <Fab
+            <IconButton
                 className={classes.root}
-                color={props.color}
-                aria-label={props.lable}
-                size={props.size}
+                size='large'
+                color='primary'
                 onClick={() => {
                     handleClick();
                 }}
             >
-                {props.icon}
-            </Fab>
+                <CancelIcon fontSize='large' />
+            </IconButton>
         </ThemeProvider>
-    </>
+    )
 }
 
-export default EndCallButton
+export default CancelButton

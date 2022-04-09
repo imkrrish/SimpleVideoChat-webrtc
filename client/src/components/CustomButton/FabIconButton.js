@@ -42,7 +42,10 @@ const FabIconButton = (props) => {
   const classes = useStyles();
   const {
     updateVideo,
-    updateMic
+    updateMic,
+    makeCall,
+    setmakeCall,
+    setCreateMyId
   } = useContext(SocketContext);
 
   const updateMedia = () => {
@@ -51,6 +54,16 @@ const FabIconButton = (props) => {
     }
     if (props.update === "Audio") {
       updateMic();
+    }
+    if (props.update === "MakeCall") {
+      if (!makeCall) {
+        setmakeCall(true);
+        setCreateMyId(true);
+      }
+      else {
+        setmakeCall(false);
+        setCreateMyId(true);
+      }
     }
   }
   return <>

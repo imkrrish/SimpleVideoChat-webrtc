@@ -1,0 +1,71 @@
+.bg {
+    position: absolute;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.call {
+    position: absolute;
+    top: 51%;
+    left: 50.5%;
+    height: auto;
+    width: 15%;
+    transform: translate(-50%, -50%);
+}
+
+.calling {
+    position: absolute;
+    z-index: 88;
+    width: 70%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: ease-in-out 0.5s;
+}
+
+.options {
+    position: absolute;
+    z-index: 999;
+    width: 70%;
+    height: auto;
+    top: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.typography {
+    text-align: center;
+}
+
+.span {
+    font-weight: bolder;
+    animation: wave 1.3s linear infinite;
+}
+
+#span2 {
+    animation-delay: -1.1s;
+}
+
+#span3 {
+    animation-delay: -0.9s;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2%;
+    padding: 0% 25%;
+}
+
+@keyframes wave {
+    0%, 60%, 100% {
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+    }
+}

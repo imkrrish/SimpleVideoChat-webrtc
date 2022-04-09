@@ -1,11 +1,11 @@
 import React, { createContext, useState, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
-import Call from '@mui/icons-material/Call';
+// import Call from '@mui/icons-material/Call';
 
 const SocketContext = createContext();
 
-const socket = io('https://localhost:5000');
+const socket = io.connect('http://localhost:5000');
 
 
 const ContextProvider = ({ children }) => {
@@ -19,11 +19,14 @@ const ContextProvider = ({ children }) => {
     const [userName, setUserName] = useState("");
     const [otherUser, setOtherUser] = useState("");
     const [myVideoStatus, setMyVideoStatus] = useState(true);
-    const [userVideoStatus, setUserVideoStatus] = useState();
+    const [userVideoStatus, setUserVideoStatus] = useState(false);
     const [myMicStatus, setMyMicStatus] = useState(true);
     const [userMicStatus, setUserMicStatus] = useState();
     const [msgRcv, setMsgRsv] = useState("");
     const [screenShare, setScreenSahre] = useState(false);
+    const [CreateMyId, setCreateMyId] = useState(false);
+    const [makeCall, setmakeCall] = useState(false);
+    const [calling, setCalling] = useState(false);
 
     const myVideo = useRef();
     const userVideo = useRef();
@@ -54,31 +57,36 @@ const ContextProvider = ({ children }) => {
             setName(localStorage.getItem("name"));
         }
 
-        socket.on("me", (id) => setMe(id));
+        socket.on("me", (id) => { setMe(id) });
 
         socket.on("endCall", () => {
             window.location.reload();
         });
 
-        socket.on("updateUserMedia", ({ type, currentMediaStatus }) => {
-            if (currentMediaStatus !== null || currentMediaStatus !== []) {
-                switch (type) {
+        socket.on("updateUserMedia", (data) => {
+            if (data.currentMediaStatus !== null || data.currentMediaStatus !== []) {
+                switch (data.type) {
                     case "video":
-                        setUserVideoStatus(currentMediaStatus);
+                        setUserVideoStatus(data.currentMediaStatus);
                         break;
                     case "mic":
-                        setUserMicStatus(currentMediaStatus);
+                        setUserMicStatus(data.currentMediaStatus);
                         break;
                     default:
-                        setUserMicStatus(currentMediaStatus[0]);
-                        setUserVideoStatus(currentMediaStatus[1]);
+                        setUserMicStatus(data.currentMediaStatus[0]);
+                        setUserVideoStatus(data.currentMediaStatus[1]);
                         break;
                 }
             }
         });
 
-        socket.on("callUser", ({ from, name: callerName, signal }) => {
-            setCall({ isReceivingCall: true, from, name: callerName, signal });
+        socket.on("callUser", (data) => {
+            setCall({
+                isReceivingCall: true,
+                name: data.name,
+                from: data.from,
+                signal: data.signal,
+            });
         });
 
         socket.on("msgRsv", ({ name, msg: value, sender }) => {
@@ -88,6 +96,45 @@ const ContextProvider = ({ children }) => {
             }, 2000);
         });
     }, []);
+
+
+    const callUser = (id) => {
+        setmakeCall(false);
+        setCreateMyId(false);
+        const peer = new Peer({
+            initiator: true,
+            trickle: false,
+            stream: stream
+        });
+        setOtherUser(id);
+        setCalling(true);
+        peer.on("signal", (data) => {
+            socket.emit("callUser", {
+                userToCall: id,
+                signalData: data,
+                from: me,
+                name: name,
+            });
+        });
+
+        peer.on("stream", (currentStream) => {
+            userVideo.current.srcObject = currentStream;
+        });
+
+        socket.on("callAccepted", ({ signal, userName }) => {
+            setCalling(false);
+            setCallAccepted(true);
+            setUserName(userName);
+            peer.signal(signal);
+            socket.emit("updateMyMedia", {
+                type: "both",
+                currentMediaStatus: [myMicStatus, myVideoStatus],
+            });
+        });
+
+        connectionRef.current = peer;
+
+    };
 
     const answerCall = () => {
         setCallAccepted(true);
@@ -101,7 +148,7 @@ const ContextProvider = ({ children }) => {
         peer.on("signal", (data) => {
             socket.emit("answerCall", {
                 signal: data,
-                to: Call.from,
+                to: call.from,
                 userName: name,
                 type: "both",
                 myMediaStatus: [myMicStatus, myVideoStatus],
@@ -117,38 +164,6 @@ const ContextProvider = ({ children }) => {
         connectionRef.current = peer;
     };
 
-    const callUser = (id) => {
-        const peer = new Peer({
-            initiator: true,
-            trickle: false,
-            stream: stream
-        });
-        setOtherUser(id);
-        peer.on("signal", (data) => {
-            socket.emit("callUser", {
-                userTOCall: id,
-                signalData: data,
-                from: me,
-                name,
-            });
-        });
-
-        peer.on("stream", (currentStream) => {
-            userVideo.current.srcObject = currentStream;
-        });
-
-        socket.on("callAccepted", ({ signal, userName }) => {
-            setCallAccepted(true);
-            setUserName(userName);
-            peer.signal(signal);
-            socket.emit("updateMyMedia", {
-                type: "both",
-                currentMediaStatus: [myMicStatus, myVideoStatus],
-            });
-        });
-
-        connectionRef.current = peer;
-    };
 
     const updateVideo = () => {
         setMyVideoStatus((currentStatus) => {
@@ -172,6 +187,15 @@ const ContextProvider = ({ children }) => {
         });
     };
 
+    const CreateId = () => {
+        if (!CreateMyId) {
+            setCreateMyId(true);
+        }
+        else {
+            setCreateMyId(false);
+        }
+    }
+
     const leaveCall = () => {
         setcallEnded(true);
 
@@ -184,6 +208,7 @@ const ContextProvider = ({ children }) => {
         <SocketContext.Provider value={{
             call,
             callAccepted,
+            answerCall,
             myVideo,
             userVideo,
             stream,
@@ -193,6 +218,7 @@ const ContextProvider = ({ children }) => {
             me,
             callUser,
             leaveCall,
+            otherUser,
             setOtherUser,
             userName,
             myVideoStatus,
@@ -203,6 +229,13 @@ const ContextProvider = ({ children }) => {
             myMicStatus,
             userMicStatus,
             updateMic,
+            setCreateMyId,
+            CreateMyId,
+            CreateId,
+            makeCall,
+            setmakeCall,
+            setCalling,
+            calling
         }}>
             {children}
         </SocketContext.Provider>

@@ -1,0 +1,11 @@
+.overlay {
+    border-radius: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(39, 54, 106, 64%);
+    backdrop-filter: blur(5px);
+}

@@ -6,8 +6,6 @@
 
 Video Calling Web Application.
 
-br />
-
 _Loved the project? Show your love to the developer by starring this repo._
 
 <img src="https://github.com/imkrrish/imkrrish.github.io/blob/master/content/featured/Konnect/Konnect.png" style="width: 80%"/>
